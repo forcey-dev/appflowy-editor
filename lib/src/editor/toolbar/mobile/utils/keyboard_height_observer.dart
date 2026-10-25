@@ -1,23 +1,19 @@
 import 'package:appflowy_editor/src/editor/util/platform_extension.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:keyboard_height_plugin/keyboard_height_plugin.dart';
+import 'package:flutter/widgets.dart';
 
 typedef KeyboardHeightCallback = void Function(double height);
 
-// the KeyboardHeightPlugin only accepts one listener, so we need to create a
-//  singleton class to manage the multiple listeners.
-class KeyboardHeightObserver {
+// Tracks the system keyboard height through window view insets so the toolbar
+// can mirror it without depending on a native plugin.
+class KeyboardHeightObserver extends WidgetsBindingObserver {
   KeyboardHeightObserver._() {
     if (PlatformExtension.isAndroid && androidSDKVersion == -1) {
       DeviceInfoPlugin().androidInfo.then(
             (value) => androidSDKVersion = value.version.sdkInt,
           );
     }
-    _keyboardHeightPlugin.onKeyboardHeightChanged((height) {
-      notify(height);
-
-      currentKeyboardHeight = height;
-    });
+    WidgetsBinding.instance.addObserver(this);
   }
   static int androidSDKVersion = -1;
 
@@ -25,7 +21,20 @@ class KeyboardHeightObserver {
   static double currentKeyboardHeight = 0;
 
   final List<KeyboardHeightCallback> _listeners = [];
-  final KeyboardHeightPlugin _keyboardHeightPlugin = KeyboardHeightPlugin();
+
+  @override
+  void didChangeMetrics() {
+    final view = WidgetsBinding.instance.platformDispatcher.implicitView;
+    if (view == null) {
+      return;
+    }
+    final height = view.viewInsets.bottom / view.devicePixelRatio;
+    if (height == currentKeyboardHeight) {
+      return;
+    }
+    currentKeyboardHeight = height;
+    notify(height);
+  }
 
   void addListener(KeyboardHeightCallback listener) {
     _listeners.add(listener);
@@ -37,15 +46,10 @@ class KeyboardHeightObserver {
 
   void dispose() {
     _listeners.clear();
-    _keyboardHeightPlugin.dispose();
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   void notify(double height) {
-    // the keyboard height will notify twice with the same value on Android
-    if (PlatformExtension.isAndroid && height == currentKeyboardHeight) {
-      return;
-    }
-
     for (final listener in _listeners) {
       listener(height);
     }
