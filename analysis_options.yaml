@@ -30,6 +30,10 @@ linter:
 analyzer:
   exclude:
     - lib/src/l10n/**
+    - build/**
+  errors:
+    # custom_lint still uses the legacy analyzer plugin system.
+    analysis_options_deprecated_plugins: ignore
   plugins:
     - custom_lint
 
