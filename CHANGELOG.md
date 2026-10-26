@@ -1,3 +1,7 @@
+## 6.1.1
+* chore: require Flutter >= 3.47.8 / Dart 3.13.7 to pick up the dart:io TLS fix for [GHSA-frr6-h895-5pxp](https://github.com/dart-lang/sdk/security/advisories/GHSA-frr6-h895-5pxp)
+* chore: migrate scrollable_positioned_list internals from the deprecated `cacheExtent`/`cacheExtentStyle` to `scrollCacheExtent`
+
 ## 6.1.0
 * fix: unable to input text on windows desktop by @imaachman in https://github.com/AppFlowy-IO/appflowy-editor/pull/1126
 * feat: open html decoder for custom parser by @richardshiue in https://github.com/AppFlowy-IO/appflowy-editor/pull/1145

@@ -23,7 +23,7 @@ class UnboundedCustomScrollView extends CustomScrollView {
     bool shrinkWrap = false,
     super.center,
     double anchor = 0.0,
-    super.cacheExtent,
+    super.scrollCacheExtent,
     super.slivers,
     super.semanticChildCount,
     super.dragStartBehavior,
@@ -55,7 +55,7 @@ class UnboundedCustomScrollView extends CustomScrollView {
         axisDirection: axisDirection,
         offset: offset,
         slivers: slivers,
-        cacheExtent: cacheExtent,
+        scrollCacheExtent: scrollCacheExtent,
         center: center,
         anchor: anchor,
       );
@@ -65,7 +65,7 @@ class UnboundedCustomScrollView extends CustomScrollView {
       axisDirection: axisDirection,
       offset: offset,
       slivers: slivers,
-      cacheExtent: cacheExtent,
+      scrollCacheExtent: scrollCacheExtent,
       center: center,
       anchor: anchor,
     );
